@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{margin:0;padding:0;list-style:none;}
+        #box{
+            width: 572px;
+            height: 177px;
+            border: 1px solid #000;
+            overflow: hidden;
+            margin: 100px auto;
+            position: relative;
+        }
+        #box ul{
+            position: absolute;
+            left:0;
+            top:0;
+        }
+        #box ul li{
+            width: 133px;
+            height: 200px;
+            padding: 0 5px;
+            float: left;
+        }
+        #lnkLeft{
+            width: 50%;
+            height: 100%;
+            background: red;
+            position: absolute;
+            top:0;
+            left:0;
+            z-index: 1000;
+            opacity: 0;
+        }
+        #lnkRight{
+            width: 50%;
+            height: 100%;
+            background: blue;
+            position: absolute;
+            top:0;
+            right:0;
+            z-index: 1000;
+            opacity: 0;
+        }
+      #last{
+          font-size:20px;
+          color: #fff;
+          position: absolute;
+          top:360px;
+          left:370px;
+          width: 800px;
+      }
+    </style>
+    <script>
+        window.onload = function(){
+            var oBox = document.getElementById('box');
+            var oUl = document.getElementById('ul1');
+            var oLeft = document.getElementById('lnkLeft');
+            var oRinght = document.getElementById('lnkRight');
+            var aLi = oUl.children;
+
+            oUl.innerHTML += oUl.innerHTML;
+            oUl.style.width = aLi.length * aLi[0].offsetWidth + 'px';
+
+            var timer = null;
+            var W = oUl.offsetWidth / 2;
+            var left = 0;
+            function toLeft(){
+                clearInterval(timer);
+                timer = setInterval(function(){
+                    left -= 2;
+                    if(left < 0){
+                        oUl.style.left = left % W +'px';
+                    }
+                    else{
+                        oUl.style.left = (left % W - W)% W +'px';
+                    }
+
+                },30)
+            }
+            function toRight(){
+                clearInterval(timer);
+                timer = setInterval(function(){
+                    left += 2;
+                    if(left < 0){
+                        oUl.style.left = left % W + 'px';
+                    }
+                    else{
+                        oUl.style.left = (left % W - W) % W + 'px';
+                    }
+
+                },30)
+            }
+            oLeft.onmouseover = function(){
+                toLeft();
+            };
+            oRinght.onmouseover = function(){
+                toRight();
+            };
+            toLeft();
+        };
+    </script>
+</head>
+<body style="background: cadetblue">
+<div id="box">
+    <a href="javascript:;" id="lnkLeft">←</a>
+    <a href="javascript:;" id="lnkRight">→</a>
+    <ul id="ul1">
+        <li><img src="images/1.jpg" alt=""></li>
+        <li><img src="images/2.jpg" alt=""></li>
+        <li><img src="images/3.jpg" alt=""></li>
+        <li><img src="images/4.jpg" alt=""></li>
+    </ul>
+
+</div>
+<div id="last">柳夏：
+    认识你有6天了！认识你是我的荣幸！真的认识你我特别开心，我第一次玩这个游戏就能认识你我感觉特别骄傲！我刚刚看到任务，我觉得我身为程序员应该手写一个小效果给你，我就写这么一个小东西送给你！感谢这六天的陪伴，希望我们过了这七天还能够天天都说早安晚安（虽然每天都是我在说...）哈哈 晚安咯！
+</div>
+</body>
+</html>
