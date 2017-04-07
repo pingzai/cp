@@ -1,128 +1,147 @@
-<!DOCTYPE html>
-<html lang="en">
+﻿<!doctype html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title></title>
-    <style>
-        *{margin:0;padding:0;list-style:none;}
-        .warp{
-            width: 1200px;
-            margin:0 auto;
-        }
-        #box{
-            width: 572px;
-            height: 177px;
-            border: 1px solid #000;
-            overflow: hidden;
-            margin: 100px;
-            position: relative;
-            margin-left:135px;
-        }
-        #box ul{
-            position: absolute;
-            left:0;
-            top:0;
-        }
-        #box ul li{
-            width: 133px;
-            height: 200px;
-            padding: 0 5px;
-            float: left;
-        }
-        #lnkLeft{
-            width: 50%;
-            height: 100%;
-            background: red;
-            position: absolute;
-            top:0;
-            left:0;
-            z-index: 1000;
-            opacity: 0;
-        }
-        #lnkRight{
-            width: 50%;
-            height: 100%;
-            background: blue;
-            position: absolute;
-            top:0;
-            right:0;
-            z-index: 1000;
-            opacity: 0;
-        }
-      #last{
+<meta charset="utf-8">
+<meta name="author" content="" />
+<meta name="copyright" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title></title>
+<style>
+html{ font-size:100px; }
+*{ margin:0; padding:0; list-style:none; }
+#box{ width:6.4rem; overflow:hidden; }
+.aul{ width:38.4rem; overflow:hidden; }
+.aul li{ width:6.4rem; height:200px; float:left; text-align:center; line-height:200px; color:#fff;}
+.aul li:nth-child(1){ background:#3C6; }
+.aul li:nth-child(2){ background:#399; }
+.aul li:nth-child(3){ background:#6cf; }
+.aul li:nth-child(4){ background:#639; }
+.aul li:nth-child(5){ background:#3C6; }
+.aul li:nth-child(6){ background:#399; }
+#last{
           font-size:20px;
-          color: #fff;
-          position: absolute;
-          top:360px;
-          left:370px;
-          width: 800px;
-          margin-left:-350px;
+          color: #ccc;
+          width: 6.4rem;
       }
-    </style>
-    <script>
-        window.onload = function(){
-            var oBox = document.getElementById('box');
-            var oUl = document.getElementById('ul1');
-            var oLeft = document.getElementById('lnkLeft');
-            var oRinght = document.getElementById('lnkRight');
-            var aLi = oUl.children;
+</style>
+<script>
+;(function (win,doc){
+	function changeSize(){
+		doc.documentElement.style.fontSize=50*doc.documentElement.clientWidth/320+'px';
+	}
+	changeSize();
+	win.addEventListener('resize',changeSize,false);
+})(window,document);
 
-            oUl.innerHTML += oUl.innerHTML;
-            oUl.style.width = aLi.length * aLi[0].offsetWidth + 'px';
-
-            var timer = null;
-            var W = oUl.offsetWidth / 2;
-            var left = 0;
-            function toLeft(){
-                clearInterval(timer);
-                timer = setInterval(function(){
-                    left -= 2;
-                    if(left < 0){
-                        oUl.style.left = left % W +'px';
-                    }
-                    else{
-                        oUl.style.left = (left % W - W)% W +'px';
-                    }
-
-                },30)
-            }
-            function toRight(){
-                clearInterval(timer);
-                timer = setInterval(function(){
-                    left += 2;
-                    if(left < 0){
-                        oUl.style.left = left % W + 'px';
-                    }
-                    else{
-                        oUl.style.left = (left % W - W) % W + 'px';
-                    }
-
-                },30)
-            }
-            oLeft.onmouseover = function(){
-                toLeft();
-            };
-            oRinght.onmouseover = function(){
-                toRight();
-            };
-            toLeft();
-        };
-    </script>
+document.addEventListener('DOMContentLoaded',function (){
+	var oUl=document.querySelector('#box ul');
+	var aLi=oUl.children;
+	var iNow=1;
+	var x=0;
+	var bOk=false;
+	x=-iNow*aLi[0].offsetWidth;
+	oUl.style.WebkitTransform='translate('+x+'px)';
+	oUl.addEventListener('touchstart',function (ev){
+		if(bOk)return;
+		bOk=true;
+		var disX=ev.targetTouches[0].pageX-x;
+		var downX=ev.targetTouches[0].pageX;
+		
+		oUl.style.WebkitTransition='1s all ease';
+		function fnMove(ev){
+			x=ev.targetTouches[0].pageX-disX;
+			
+			oUl.style.WebkitTransform='translate('+x+'px)';
+		}
+		function fnEnd(ev){
+			document.removeEventListener('touchmove',fnMove,false);
+			document.removeEventListener('touchend',fnEnd,false);
+			
+			var upX=ev.changedTouches[0].pageX;
+			
+			if(Math.abs(upX-downX)>50){
+				if(downX>upX){	//++
+					iNow++;
+				}else{ 			//--
+					iNow--;
+				}
+				x=-iNow*aLi[0].offsetWidth;
+				oUl.style.WebkitTransform='translateX('+x+'px)';
+			}else{
+				x=-iNow*aLi[0].offsetWidth;
+				oUl.style.WebkitTransform='translateX('+x+'px)';
+			}
+			
+		}
+		
+		function tEnd(){
+			bOk=false;
+			if(iNow==5){
+				iNow=1;
+				x=-iNow*aLi[0].offsetWidth;
+				oUl.style.transition='none';
+				oUl.style.WebkitTransform='translateX('+x+'px)';
+			}
+			if(iNow==0){
+				iNow=4;
+				x=-iNow*aLi[0].offsetWidth;
+				oUl.style.transition='none';
+				oUl.style.WebkitTransform='translateX('+x+'px)';
+			}
+			oUl.removeEventListener('transitionend',tEnd,false);
+		}
+		
+		oUl.addEventListener('transitionend',tEnd,false);
+		
+		document.addEventListener('touchmove',fnMove,false);
+		document.addEventListener('touchend',fnEnd,false);
+		ev.preventDefault();
+	},false);
+},false);
+</script>
 </head>
-<body style="background: cadetblue">
-<div id="box">
-    <a href="javascript:;" id="lnkLeft">←</a>
-    <a href="javascript:;" id="lnkRight">→</a>
-    <ul id="ul1">
-        <li><img src="images/1.jpg" alt=""></li>
-        <li><img src="images/2.jpg" alt=""></li>
-        <li><img src="images/3.jpg" alt=""></li>
-        <li><img src="images/4.jpg" alt=""></li>
-    </ul>
 
-</div>
-<div id="last">柳夏：
+<body>
+	<div id="box">
+        <ul class="aul">
+            <li><img src="images/6.jpg" alt="" /></li>
+            <li><img src="images/2.jpg" alt="" /></li>
+            <li><img src="images/3.jpg" alt="" /></li>
+            <li><img src="images/4.jpg" alt="" /></li>
+            <li><img src="images/1.jpg" alt="" /></li>
+            <li><img src="images/1.jpg" alt="" /></li>
+        </ul>
+    </div>
+    <div id="last">柳夏：
     认识你有6天了！认识你是我的荣幸！真的认识你我特别开心，我第一次玩这个游戏就能认识你我感觉特别骄傲！我刚刚看到任务，我觉得我身为程序员应该手写一个小效果给你，我就写这么一个小东西送给你！感谢这六天的陪伴，希望我们过了这七天还能够天天都说早安晚安（虽然每天都是我在说...）哈哈 晚安咯！
 </div>
+<div>
+<audio src="mp3/枫.mp3" controls autoplay loop></audio>
+</div>
+
+
 </body>
+
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
